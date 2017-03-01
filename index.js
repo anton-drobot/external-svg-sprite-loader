@@ -15,8 +15,8 @@ const DEFAULT_QUERY_VALUES = {
     prefix: 'icon-',
     suffix: '',
     svgoOptions: {
-        plugins: [],
-    },
+        plugins: []
+    }
 };
 
 /**
