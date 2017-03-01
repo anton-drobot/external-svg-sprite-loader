@@ -68,10 +68,9 @@ function loader(content) {
                 null,
                 `module.exports = {
                     symbol: '${icon.getUrlToSymbol(publicPath)}',
-                    view: '${icon.getUrlToView(publicPath)}',
                     viewBox: '${icon.getDocument().getViewBox()}',
                     toString: function () {
-                        return this.view;
+                        return this.symbol;
                     }
                 };`
             );
