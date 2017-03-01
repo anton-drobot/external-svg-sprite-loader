@@ -59,6 +59,7 @@ function loader(content) {
             callback(
                 null,
                 `module.exports = {
+                    name: '${icon.getName()}',
                     symbol: '${icon.getUrlToSymbol(publicPath)}',
                     viewBox: '${icon.getDocument().getViewBox()}',
                     toString: function () {
