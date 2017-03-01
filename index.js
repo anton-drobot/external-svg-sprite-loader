@@ -13,7 +13,8 @@ const SvgStorePlugin = require('./lib/SvgStorePlugin');
  */
 const DEFAULT_QUERY_VALUES = {
     name: 'img/sprite.svg',
-    prefix: 'icon',
+    prefix: 'icon-',
+    suffix: '',
     svgoOptions: {
         plugins: [],
     },
@@ -34,6 +35,8 @@ function loader(content) {
     // Parse the loader query and apply the default values in case no values are provided
     const query = Object.assign({}, DEFAULT_QUERY_VALUES, loaderUtils.getOptions(this));
 
+    const { prefix, suffix } = query;
+
     // Add the icon as a dependency
     addDependency(resourcePath);
 
@@ -48,12 +51,8 @@ function loader(content) {
             ],
         })
         .then((content) => {
-
-            // Create an hash of the optimized content to be appended to the icon name
-            const hash = loaderUtils.getHashDigest(content, 'md5', 'hex', 5);
-
             // Register the sprite and icon
-            const icon = SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, query.prefix, hash, content.toString());
+            const icon = SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, content.toString(), { prefix, suffix });
 
             // Export the icon as a metadata object that contains urls to be used on an <img/> in HTML or url() in CSS
             callback(
