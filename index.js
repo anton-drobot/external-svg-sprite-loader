@@ -15,15 +15,7 @@ const DEFAULT_QUERY_VALUES = {
     name: 'img/sprite.svg',
     prefix: 'icon',
     svgoOptions: {
-        plugins: [
-            { collapseGroups: true },
-            { convertPathData: true },
-            { convertStyleToAttrs: true },
-            { convertTransform: true },
-            { removeDesc: true },
-            { removeDimensions: true },
-            { removeTitle: true },
-        ],
+        plugins: [],
     },
 };
 
