@@ -1,8 +1,7 @@
 'use strict';
 
-const imagemin = require('imagemin');
-const imageminSvgo = require('imagemin-svgo');
 const loaderUtils = require('loader-utils');
+const svgo = require('svgo');
 
 const SvgStorePlugin = require('./lib/SvgStorePlugin');
 
@@ -35,7 +34,7 @@ function loader(content) {
     // Parse the loader query and apply the default values in case no values are provided
     const query = Object.assign({}, DEFAULT_QUERY_VALUES, loaderUtils.getOptions(this));
 
-    const { prefix, suffix } = query;
+    const { svgoOptions, prefix, suffix } = query;
 
     // Add the icon as a dependency
     addDependency(resourcePath);
@@ -44,15 +43,10 @@ function loader(content) {
     cacheable(false);
 
     // Start optimizing the SVG file
-    imagemin
-        .buffer(content, {
-            plugins: [
-                imageminSvgo(query.svgoOptions),
-            ],
-        })
-        .then((content) => {
+    try {
+        new svgo(svgoOptions).optimize(content, function (result) {
             // Register the sprite and icon
-            const icon = SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, content.toString(), { prefix, suffix });
+            const icon = SvgStorePlugin.getSprite(query.name).addIcon(resourcePath, result.data, { prefix, suffix });
 
             // Export the icon as a metadata object that contains urls to be used on an <img/> in HTML or url() in CSS
             callback(
@@ -66,10 +60,10 @@ function loader(content) {
                     }
                 };`
             );
-        })
-        .catch((err) => {
-            callback(err);
         });
+    } catch (err) {
+        callback(err);
+    }
 }
 
 loader.raw = true;
